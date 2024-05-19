@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Whiteboard</title>
+    <!--========== LIB ==========-->
+    <script src="lib/paper/paper-full.min.js"></script>
+
+    <link rel="stylesheet" href="lib/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="lib/bootstrap-icons/bootstrap-icons.css" />
+
+    <!--========== STYLES ==========-->
+    <link rel="stylesheet" href="css/styles.css" />
+
+    <!--========== BOX ICONS ==========-->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css"
+    />
+
+    <!--========== MENU CSS ==========-->
+    <link rel="stylesheet" href="css/menu.css" />
+  </head>
+  <body>
+    <!--========== HEADER ==========-->
+    <header class="header">
+      <div class="header__container">
+        <a href="#" class="header__logo">Whiteboard</a>
+        <div class="row">
+          <div class="col">
+            <button type="button" id="zoom-in" class="btn btn-light border p-0">
+              <em class="bi bi-plus"></em>
+            </button>
+          </div>
+          <div class="col">
+            <button
+              type="button"
+              id="zoom-out"
+              class="btn btn-light border p-0"
+            >
+              <em class="bi bi-dash"></em>
+            </button>
+          </div>
+        </div>
+        <div class="header__toggle">
+          <i class="bx bx-menu" id="header-toggle"></i>
+        </div>
+      </div>
+    </header>
+
+    <!--========== NAV ==========-->
+    <div class="nav" id="navbar">
+      <nav class="nav__container">
+        <div>
+          <a href="#" class="nav__link nav__logo">
+            <i class="bx bxs-disc nav__icon"></i>
+            <span class="nav__logo-name">Whiteboard</span>
+          </a>
+
+          <div class="nav__list">
+            <div class="nav__items">
+              <a id="move" class="nav__link">
+                <em class="bi bi-arrows-move nav__icon"></em>
+                <span class="nav__name">Move</span>
+              </a>
+              <a id="draw" class="nav__link">
+                <em class="bi bi-brush nav__icon"></em>
+                <span class="nav__name">Draw</span>
+              </a>
+              <a id="del" class="nav__link">
+                <em class="bi bi-eraser nav__icon"></em>
+                <span class="nav__name">Eraser</span>
+              </a>
+
+              <a id="text" class="nav__link">
+                <em class="bi bi-type nav__icon"></em>
+                <span class="nav__name">Text</span>
+              </a>
+              <hr />
+              <div class="d-flex">
+                <input type="text" id="mode" class="d-none" value="draw" />
+                <input
+                  type="color"
+                  id="color"
+                  class="form-control bg-light p-1"
+                  value="#000000"
+                />
+              </div>
+              <input
+                type="text"
+                id="width"
+                class="form-control bg-light p-1"
+                value="6"
+                style="width: 7rem"
+              />
+
+              <a
+                id="save-load"
+                class="nav__link"
+                data-toggle="modal"
+                data-target="#save-load-modal"
+              >
+                <em class="bi bi-save nav__icon"></em>
+                <span class="nav__name">Save</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
+    <div
+      class="modal fade"
+      id="save-load-modal"
+      data-backdrop="static"
+      data-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="Save and load modal"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content m-2">
+          <div class="modal-header">
+            <h5 class="modal-title d-none" id="save-load-lable">Save & Load</h5>
+            <h5 class="modal-title save-item" id="save-lable">Save</h5>
+            <h5 class="modal-title load-item d-none" id="load-lable">Load</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true"><em class="bi bi-x"></em></span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <textarea
+              id="save-textarea"
+              class="form-control save-item"
+              aria-label="With textarea"
+              readonly
+            ></textarea>
+            <textarea
+              id="load-textarea"
+              class="form-control load-item d-none"
+              aria-label="With textarea"
+            ></textarea>
+            <div
+              id="copy-save-textarea-container"
+              class="hover-container save-item"
+            >
+              <button
+                id="copy-save-textarea"
+                default-text="Copy"
+                class="btn btn-light"
+              >
+                Copy
+              </button>
+            </div>
+          </div>
+          <div class="modal-footer justify-content-between">
+            <div class="modal-buttons">
+              <button
+                id="save-jpeg-button"
+                type="button"
+                class="btn btn-light border save-item"
+              >
+                <em class="bi bi-file-earmark-image"></em>
+                Save as JPEG
+              </button>
+              <button
+                id="save-json-button"
+                type="button"
+                class="btn btn-light border save-item"
+              >
+                <em class="bi bi-file-earmark-code"></em>
+                Save as JSON
+              </button>
+              <button
+                id="load-json-button"
+                type="button"
+                class="btn btn-light border load-item"
+              >
+                <em class="bi bi-file-earmark-code"></em>
+                Load from JSON
+              </button>
+              <input
+                type="file"
+                id="load-json-file"
+                accept="application/JSON"
+                class="d-none"
+              />
+            </div>
+            <div class="modal-buttons">
+              <button
+                id="load-button"
+                type="button"
+                class="btn btn-light border save-item"
+              >
+                <em class="bi bi-upload"></em>
+                Load data
+              </button>
+              <button
+                id="save-button"
+                type="button"
+                class="btn btn-light border load-item d-none"
+              >
+                <em class="bi bi-download"></em>
+                Save data
+              </button>
+              <button
+                id="save-load-done"
+                type="button"
+                class="btn btn-dark"
+                data-dismiss="modal"
+              >
+                <em class="bi bi-check2"></em>
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--========== CONTENTS ==========-->
+    <main>
+      <section>
+        <div class="main">
+          <canvas resize="true" id="whiteboard" data-paper-scope="1"></canvas>
+        </div>
+
+        <div class="hud">
+          <div id="zoom-percent-container" class="hover-container">
+            <button class="btn btn-light">
+              <span id="zoom-percent">100</span>%
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!--========== LIB ==========-->
+    <script src="lib/jquery/jquery.min.js"></script>
+    <script src="lib/bootstrap/bootstrap.bundle.min.js"></script>
+
+    <!--========== WHITEBOARD ==========-->
+    <script src="js/whiteboard.js"></script>
+    <script src="js/file.js"></script>
+
+    <!--========== TOOLS ==========-->
+    <script src="js/tools/general.js"></script>
+    <script src="js/tools/brush.js"></script>
+    <script src="js/tools/eraser.js"></script>
+    <script src="js/tools/hand.js"></script>
+    <script src="js/tools/shape.js"></script>
+    <script src="js/tools/text.js"></script>
+
+    <!--========== SITE ==========-->
+    <script src="js/site.js"></script>
+
+    <!--========== MENU JS ==========-->
+    <script src="js/menu.js"></script>
+  </body>
+</html>
